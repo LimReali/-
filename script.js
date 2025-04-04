@@ -250,7 +250,7 @@ function populateRoomTable(data, selectedRoom, deletedEntries = []) {
       ].forEach((day) => {
           const cell = row.insertCell();
 
-          // Filter out deleted entries
+          // Отфильтровывать удаленные записи
           const entry = data.find(
               (item) =>
                   normalizeTimeFormat(item.time) === time &&
@@ -294,7 +294,7 @@ function populateEditRoomEditTable(data, selectedRoom, deletedEntries = []) {
       ].forEach((day) => {
           const cell = row.insertCell();
 
-          // Filter out deleted entries
+          // Отфильтровывать удаленные записи
           const entry = data.find(
               (item) =>
                   normalizeTimeFormat(item.time) === time &&
@@ -328,12 +328,12 @@ function populateEditTeacherTable(data, selectedTeacher, deletedEntries = []) {
   const teacherTableBody = document.getElementById("editTeacherTable").getElementsByTagName("tbody")[0];
   teacherTableBody.innerHTML = "";
 
-  // Filter data by selected teacher
+  //Фильтровать данные по выбранному преподавателю
   const teacherData = data.filter(item => item.teacher === selectedTeacher);
 
   teacherData.forEach(item => {
       if (deletedEntries.some(deleted => normalizeTimeFormat(deleted.time) === item.time && deleted.day === item.day)) {
-          return; // Skip deleted entries
+          return; // Пропускать удаленные записи
       }
 
       const row = teacherTableBody.insertRow();
@@ -344,7 +344,7 @@ function populateEditTeacherTable(data, selectedTeacher, deletedEntries = []) {
       row.insertCell(4).innerText = item.room;
       row.insertCell(5).innerText = item.subject;
 
-      // Add delete button
+      // Добавление кнопки удаления
       const deleteButton = document.createElement("button");
       deleteButton.textContent = "Удалить";
       deleteButton.onclick = function () {
@@ -369,7 +369,7 @@ function addDeleteButton(cell, time, day, data, deletedEntries) {
   deleteButton.onclick = function (event) {
       event.stopPropagation(); // Prevent cell editing
 
-      // Find the entry to delete
+      // Поиск записи, которую нужно удалить
       const entryToDelete = data.find(
           (item) => normalizeTimeFormat(item.time) === time && item.day === day
       );
@@ -395,7 +395,7 @@ function addDeleteButton(cell, time, day, data, deletedEntries) {
           document.getElementById("editRoomSelect").value,
           deletedEntries
       );
-      // Update the edit teacher table
+      // Обновновление таблицы редактирования учителей
       populateEditTeacherTable(
           data,
           document.getElementById("editTeacherSelect").value,
@@ -534,7 +534,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           roomSelect.add(option);
       });
 
-      // Populate the teacher select
+      // Заполние поля выбора преподавателя
       const editTeacherSelect = document.getElementById("editTeacherSelect");
       uniqueTeachers.forEach((teacher) => {
           const option = document.createElement("option");
@@ -555,13 +555,13 @@ document.addEventListener("DOMContentLoaded", async function () {
           populateGroupTable(data, selectedGroup, deletedEntries);
       });
 
-      // Teacher select change event
+      
       editTeacherSelect.addEventListener("change", function () {
           const selectedTeacher = this.value;
           populateEditTeacherTable(data, selectedTeacher, deletedEntries);
       });
 
-      // Initial population of edit teacher table
+      // Начальное заполнение таблицы edit teacher
       populateEditTeacherTable(data, editTeacherSelect.value, deletedEntries);
 
       // Заполняем таблицу расписания по кабинетам при начальной загрузке
@@ -627,7 +627,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               );
               populateGroupTable(data, document.getElementById("groupSelect").value, deletedEntries);
 
-              // Clear input fields
+              // Очистить поля ввода
               document.getElementById("time").value = "";
               document.getElementById("teacher").value = "";
               document.getElementById("room").value = "";
@@ -667,20 +667,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                       if (contentDiv && contentDiv.innerText !== undefined) {
                           const cellText = contentDiv.innerText;
 
-                          // Check if there is an existing entry for this time and day
+                          // Проверьте, есть ли запись на это время и день
                           const existingEntryIndex = data.findIndex(
                               (item) =>
                                   normalizeTimeFormat(item.time) === time && item.day === day
                           );
 
                           if (existingEntryIndex !== -1) {
-                              // Update existing entry
+                              // Обновить существующую запись
                               data[existingEntryIndex].teacher = cellText.split("\n")[0] || "";
                               data[existingEntryIndex].group = cellText.split("\n")[1] || "";
                               data[existingEntryIndex].room = cellText.split("\n")[2] || "";
                               data[existingEntryIndex].subject = cellText.split("\n")[3] || "";
                           } else {
-                              // Create new entry
+                              // Создание новой записи
                               const newEntry = {
                                   time: time,
                                   day: day,
@@ -696,20 +696,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                       // Если ячейка содержит текст напрямую
                       const cellText = cell.innerText;
 
-                      // Check if there is an existing entry for this time and day
+                      // Проверьте, есть ли запись на это время и день
                       const existingEntryIndex = data.findIndex(
                           (item) =>
                               normalizeTimeFormat(item.time) === time && item.day === day
                       );
 
                       if (existingEntryIndex !== -1) {
-                          // Update existing entry
+                          // Обновить существующую запись
                           data[existingEntryIndex].teacher = cellText.split("\n")[0] || "";
                           data[existingEntryIndex].group = cellText.split("\n")[1] || "";
                           data[existingEntryIndex].room = cellText.split("\n")[2] || "";
                           data[existingEntryIndex].subject = cellText.split("\n")[3] || "";
                       } else {
-                          // Create new entry
+                          // Создание новой записи
                           const newEntry = {
                               time: time,
                               day: day,
@@ -753,18 +753,18 @@ document.addEventListener("DOMContentLoaded", async function () {
       .addEventListener("input", function () {
           const searchTerm = this.value.toLowerCase();
 
-          // Clear existing table
+          // Очистить существующую таблицу
           const teacherTableBody = document
               .getElementById("teacherTable")
               .getElementsByTagName("tbody")[0];
           teacherTableBody.innerHTML = "";
 
-          // Filter data based on search term
+          // Фильтровать данные на основе поискового запроса
           const filteredData = data.filter((item) =>
               item.teacher.toLowerCase().includes(searchTerm)
           );
 
-          // Populate the table with the filtered data
+          // Заполните таблицу отфильтрованными данными
           filteredData.forEach((item) => {
               if (
                   deletedEntries.some(
@@ -773,7 +773,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                           deleted.day === item.day
                   )
               ) {
-                  return; // Skip deleted entries
+                  return; // Пропускать удаленные записи
               }
 
               const row = teacherTableBody.insertRow();
@@ -784,7 +784,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               row.insertCell(4).innerText = item.room;
               row.insertCell(5).innerText = item.subject;
 
-              // Add delete button
+              // Кнопка удаления
               const deleteButton = document.createElement("button");
               deleteButton.textContent = "Удалить";
               deleteButton.onclick = function () {
